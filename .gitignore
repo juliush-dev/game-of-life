@@ -1,0 +1,44 @@
+#ant specific
+dist/
+build/
+
+#netbeans specific
+core
+nbproject/*
+!nbproject/project.properties
+!nbproject/project.xml
+.classpath
+.project
+.settings/
+bin/
+target/
+Praxis/
+Theorie/
+Projects/
+Aufgaben_Uebungen/
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+nb-configuration.xml
+nbactions.xml
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+/Praktika/learningZone/nbproject/private/

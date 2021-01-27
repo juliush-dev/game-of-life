@@ -64,13 +64,10 @@ class Grid {
 
 	static enum Directions {
 		N("N"), S("S"), W("W"), E("E"), NW("NW"), NE("NE"), SW("SW"), SE("SE");
-
 		String val;
-
 		Directions(String val) {
 			this.val = val;
 		}
-
 		@Override
 		public String toString() {
 			return val.length() == 2 ? val : (val += " ");
@@ -78,15 +75,15 @@ class Grid {
 	}
 
 	static class Cell {
-		private static final String LIVE = "x";
-		private static final String DEAD = " ";
+		public static final String LIVE = "x";
+		public static final String DEAD = ".";
+		public static final String EMPTY = " ";
 		private Coordinate co;
 		private boolean isAlive;
 		private Map<Directions, Coordinate> neighbours;
 
 		public Cell(Coordinate co) {
 			this.co = co;
-			isAlive = false;
 			neighbours = new HashMap<>();
 		}
 
@@ -161,7 +158,7 @@ class Grid {
 				Cell cell = new Cell(new Coordinate(row, col));
 				initiateNeighboursOf(cell);
 				cells[row][col] = cell;
-				grid += ((col == inner) ? ("|" + cell.getState() + "|\n") : ("|" + cell.getState()));
+				grid += ((col == inner) ? ("|" + Cell.EMPTY + "|\n") : ("|" +  Cell.EMPTY));
 			}
 		}
 	}
@@ -229,7 +226,6 @@ class Grid {
 		Cell cell = cells[co.getrow()][co.getcol()];
 		cell.setAlive(val);
 		updateWith(cell);
-//		show();
 	}
 	
 	public Cell[][] getCells(){

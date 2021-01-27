@@ -6,25 +6,43 @@ import game_of_life.Grid.Coordinate;
 public class Main {
 
 	public static void main(String[] args) {
-		GameOfLife gof = new GameOfLife(8, 100);
-//		gof.setAlive(new Coordinate(2, 3),
-//				new Coordinate(3, 3), 
-//				new Coordinate(4, 3),
-//				new Coordinate(3, 7),
-//				new Coordinate(3, 6),
-//				new Coordinate(3, 5),
-//				new Coordinate(3, 1),
-//				new Coordinate(2, 7),
-//				new Coordinate(2, 2),
-//				new Coordinate(2, 3),
-//				new Coordinate(4, 3));
 
-		gof.setAlive(new Coordinate(2, 3), new Coordinate(2, 3), new Coordinate(3, 3), new Coordinate(3, 4),
-				new Coordinate(3, 8), new Coordinate(4, 0), new Coordinate(4, 1), new Coordinate(4, 2),
-				new Coordinate(3, 2), new Coordinate(3, 5), new Coordinate(6, 3));
-
+		GameOfLife gof = new GameOfLife(15);
+		char dead = Cell.DEAD.charAt(0);
+		char live = Cell.LIVE.charAt(0);
+		char empty = Cell.EMPTY.charAt(0);
+		int generation = 100;
+		char[][] template = { 
+				{ live, live, dead, dead, dead}, 
+				{ live, dead, live, dead, dead, empty, dead}, 
+				{ live, dead, dead, dead, live, empty, dead, empty, dead, live },
+				{ live, dead, live, empty, dead, dead, live, dead },
+				{ empty, live, dead, empty },
+				{ live, live, dead, live, live, live, live, dead, dead, live, live, live, live, dead },
+				{ live, dead, dead, live, dead, dead, dead, empty, dead, empty, live },
+				{empty, dead, dead, live, dead},
+				{empty,  empty, dead, empty, dead, live, dead, live, dead, dead, dead, live, live},
+				{ dead, dead, live, dead, dead, dead, dead, empty, dead, live, dead, live, dead, live},
+				{ live, live, dead, live, dead, empty, dead, empty, live },
+				{ dead, dead, dead, empty, dead, empty, dead, live, dead, live, dead, empty, dead, empty },
+				{ live, live, dead, live, live, live, live, dead, dead, live, live, dead, empty },
+				{ live, dead, dead, empty, dead, empty, live, empty, dead, dead, live, dead, live },
+				{ dead, live, empty, dead, dead, dead, empty, dead, empty, empty, empty, live, dead },
+				{ live, live, dead, live, dead, empty, dead, empty, live, live, dead, live, dead, dead, dead },
+				{ dead, dead, dead, live, live, empty, dead, live, empty, dead, empty, dead, live, live },
+				{ dead, dead, live, dead, live, dead, dead, empty, dead, empty, empty, empty, live, dead },
+				{ live, dead, empty, live, live, live, dead, live, live, dead, live, dead, dead, dead },
+				{ dead, dead, dead, live, empty, dead, empty, dead, live, live },
+				{dead, live, live, dead, empty },
+				{ live, live, dead, live, dead, empty, dead, dead, dead },
+				{ dead, dead, dead, empty, dead, live, live },
+				{ dead, dead, live, dead, live, dead, dead, empty, dead, empty, empty, empty, live, dead },
+				{ live, dead, empty, live, dead, dead, dead },
+				{ dead, dead, live, live },
+				{ live, live, dead, empty }
+		};
+		gof.gameOfLife(template, generation);
 		gof.play();
-
 	}
 
 	static class GameOfLife {
@@ -38,6 +56,11 @@ public class Main {
 			this.generation = generation;
 		}
 
+		public GameOfLife(int gridSize) {
+			this.gridSize = gridSize;
+			grid = new Grid(this.gridSize);
+		}
+
 		public void setAlive(Coordinate... coords) {
 			for (Coordinate co : coords) {
 				if (!grid.isOutOfBound(co)) {
@@ -46,6 +69,29 @@ public class Main {
 				} else {
 					System.out.println(co + " isn't valid");
 				}
+			}
+		}
+
+		public void setAlive(char[][] template) {
+			int row = 0, col = 0;
+
+			for (char[] rowChar : template) {
+				if (row == grid.size)
+					break;
+				for (char colChar : rowChar) {
+					if (col == grid.size)
+						break;
+					Coordinate co = new Coordinate(row, col);
+					if (!grid.isOutOfBound(co)) {
+						if (Cell.DEAD.charAt(0) == colChar)
+							grid.setAlive(co, false);
+						else if (Cell.LIVE.charAt(0) == colChar)
+							grid.setAlive(co, true);
+					}
+					col++;
+				}
+				col = 0;
+				row++;
 			}
 		}
 
@@ -75,16 +121,16 @@ public class Main {
 							} else {
 								nexGen.setAlive(cell.getCoordinate(), true);
 							}
+						} else if (aliveNeighboursSum == 3) {
+							nexGen.setAlive(cell.getCoordinate(), true);
 						} else {
-							if (aliveNeighboursSum == 3) {
-								nexGen.setAlive(cell.getCoordinate(), true);
-							}
+							nexGen.setAlive(cell.getCoordinate(), false);
 						}
 					}
 				}
 				grid = nexGen;
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(300);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -94,6 +140,11 @@ public class Main {
 
 		public void showGrid() {
 			grid.show();
+		}
+
+		public void gameOfLife(char[][] template, int generation) {
+			this.generation = generation;
+			setAlive(template);
 		}
 	}
 
